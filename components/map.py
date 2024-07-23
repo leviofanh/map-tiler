@@ -8,6 +8,8 @@ from models.level import Level
 from models.tile import Tile
 from resources import constants
 
+from resources.constants import GRID_COLUMNS
+
 
 class MapCanvas:
     def __init__(self, placeholder, canvas_w, canvas_h, level: Level, overview_frame):
@@ -240,6 +242,25 @@ class MapCanvas:
                 adjacent_tile = Tile(x + dx, y + dy)
                 if adjacent_tile not in self.selected_tiles or self.get_tile_by_coords(x + dx, y + dy).color != color:
                     self.canvas.create_line(x1, y1, x2, y2, fill=color, width=line_width, tags="highlight")
+
+            # Coordinates
+            y = y - GRID_COLUMNS
+
+            if y < 0:
+                y = y * -1
+
+            coord_text = f"{y} x {x}"
+            text_x = pos_x_box_scaled + tile_box_size_scaled - 5
+            text_y = pos_y_box_scaled + 5
+
+            self.canvas.create_text(
+                text_x,
+                text_y,
+                text=coord_text,
+                fill="red",
+                anchor="ne",
+                font=("Arial", 10, "bold")
+            )
 
     def redraw_image(self):
         self.draw_image(self.pil_image)
